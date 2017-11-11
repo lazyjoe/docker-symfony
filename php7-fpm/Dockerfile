@@ -11,7 +11,8 @@ RUN echo 'deb-src http://packages.dotdeb.org jessie all' >> /etc/apt/sources.lis
 RUN apt-get update && apt-get install -y \
     openssl \
     git \
-    unzip
+    unzip \
+    libpng-dev # for php-gd
 
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
@@ -24,7 +25,7 @@ RUN "date"
 
 # Type docker-php-ext-install to see available extensions
 RUN docker-php-ext-install pdo pdo_mysql
-
+RUN docker-php-ext-install gd
 
 # install xdebug
 RUN pecl install xdebug
@@ -37,17 +38,13 @@ RUN echo "xdebug.remote_connect_back=1" >> /usr/local/etc/php/conf.d/docker-php-
 RUN echo "xdebug.idekey=\"PHPSTORM\"" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 RUN echo "xdebug.remote_port=9001" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
+
 # install php7.0-mongodb
-#RUN apt-get install -y --force-yes php7.0-mongodb
-#RUN echo 'extension=/usr/lib/php/20151012/mongodb.so' >> /etc/php/7.0/cli/php.ini
+RUN apt-get install -y autoconf pkg-config libssl-dev
+RUN pecl install mongodb-1.2.2
+RUN docker-php-ext-install bcmath
+RUN echo "extension=mongodb.so" >> /usr/local/etc/php/conf.d/mongodb.ini
 
-# install mongodb ext
-RUN pecl install mongodb \
-    && docker-php-ext-enable mongodb
-
-
-# install php7.0-gd
-RUN apt-get install -y --force-yes php7.0-gd
 
 RUN echo 'alias ll="ls -al --color=auto"' >> ~/.bashrc
 RUN echo 'alias sf="php app/console"' >> ~/.bashrc
