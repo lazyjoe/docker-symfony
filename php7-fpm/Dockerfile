@@ -4,6 +4,10 @@ ARG TIMEZONE
 
 MAINTAINER Maxence POUTORD <maxence.poutord@gmail.com>
 
+# Add repo for installing php7.0-mongodb
+RUN echo 'deb http://packages.dotdeb.org jessie all' >> /etc/apt/sources.list
+RUN echo 'deb-src http://packages.dotdeb.org jessie all' >> /etc/apt/sources.list
+
 RUN apt-get update && apt-get install -y \
     openssl \
     git \
@@ -33,7 +37,10 @@ RUN echo "xdebug.remote_connect_back=1" >> /usr/local/etc/php/conf.d/docker-php-
 RUN echo "xdebug.idekey=\"PHPSTORM\"" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 RUN echo "xdebug.remote_port=9001" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
+# install php7.0-mongodb
+RUN apt-get install php7.0-mongodb
 
+RUN echo 'alias ll="ls -al --color=auto"' >> ~/.bashrc
 RUN echo 'alias sf="php app/console"' >> ~/.bashrc
 RUN echo 'alias sf3="php bin/console"' >> ~/.bashrc
 
