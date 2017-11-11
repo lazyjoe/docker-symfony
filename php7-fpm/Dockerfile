@@ -38,8 +38,13 @@ RUN echo "xdebug.idekey=\"PHPSTORM\"" >> /usr/local/etc/php/conf.d/docker-php-ex
 RUN echo "xdebug.remote_port=9001" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
 # install php7.0-mongodb
-RUN apt-get install -y --force-yes php7.0-mongodb
-RUN echo 'extension=/usr/lib/php/20151012/mongodb.so' >> /etc/php/7.0/cli/php.ini
+#RUN apt-get install -y --force-yes php7.0-mongodb
+#RUN echo 'extension=/usr/lib/php/20151012/mongodb.so' >> /etc/php/7.0/cli/php.ini
+
+# install mongodb ext
+RUN pecl install mongodb \
+    && docker-php-ext-enable mongodb
+
 
 # install php7.0-gd
 RUN apt-get install -y --force-yes php7.0-gd
