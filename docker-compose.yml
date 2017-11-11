@@ -17,6 +17,7 @@ services:
                 TIMEZONE: ${TIMEZONE}
         volumes:
             - ${SYMFONY_APP_PATH}:/var/www/symfony
+            - ${SSH_KEY_PATH}:/root/.ssh
             - ./logs/symfony:/var/www/symfony/app/logs
     nginx:
         build: nginx
