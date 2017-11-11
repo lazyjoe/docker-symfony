@@ -39,6 +39,10 @@ RUN echo "xdebug.remote_port=9001" >> /usr/local/etc/php/conf.d/docker-php-ext-x
 
 # install php7.0-mongodb
 RUN apt-get install -y --force-yes php7.0-mongodb
+RUN echo 'extension=/usr/lib/php/20151012/mongodb.so' >> /etc/php/7.0/cli/php.ini
+
+# install php7.0-gd
+RUN apt-get install -y --force-yes php7.0-gd
 
 RUN echo 'alias ll="ls -al --color=auto"' >> ~/.bashrc
 RUN echo 'alias sf="php app/console"' >> ~/.bashrc
