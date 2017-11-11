@@ -38,7 +38,7 @@ RUN echo "xdebug.idekey=\"PHPSTORM\"" >> /usr/local/etc/php/conf.d/docker-php-ex
 RUN echo "xdebug.remote_port=9001" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
 # install php7.0-mongodb
-RUN apt-get install -y php7.0-mongodb
+RUN apt-get install -y --force-yes php7.0-mongodb
 
 RUN echo 'alias ll="ls -al --color=auto"' >> ~/.bashrc
 RUN echo 'alias sf="php app/console"' >> ~/.bashrc
