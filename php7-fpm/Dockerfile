@@ -42,7 +42,7 @@ RUN echo "xdebug.remote_port=9001" >> /usr/local/etc/php/conf.d/docker-php-ext-x
 # install php7.0-mongodb
 RUN apt-get install -y autoconf pkg-config libssl-dev
 RUN pecl install mongodb-1.2.2
-RUN docker-php-ext-install bcmath
+# RUN docker-php-ext-install bcmath # not sure if it's necessary
 RUN echo "extension=mongodb.so" >> /usr/local/etc/php/conf.d/mongodb.ini
 
 
