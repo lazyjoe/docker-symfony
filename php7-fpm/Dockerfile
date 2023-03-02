@@ -21,21 +21,16 @@ RUN echo "memory_limit=512M" > /usr/local/etc/php/conf.d/memory-limit.ini && apt
     ln -snf /usr/share/zoneinfo/${TIMEZONE} /etc/localtime && echo ${TIMEZONE} > /etc/timezone && \
     printf '[PHP]\ndate.timezone = "%s"\n', ${TIMEZONE} > /usr/local/etc/php/conf.d/tzone.ini && \
     pecl install xdebug-3.0.4 && \
-    docker-php-ext-enable xdebug && \
-    echo "error_reporting = E_ALL" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini && \
-    echo "display_startup_errors = On" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini && \
-    echo "display_errors = On" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini && \
-    echo "xdebug.mode=debug" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini && \
-    echo "xdebug.discover_client_host=1" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini && \
-    echo "xdebug.idekey=\"VSCODE\"" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini && \
-    echo "xdebug.client_port=9001" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini && \
-    echo "alias ll=\"ls -al --color=auto\"" >> ~/.bashrc && \
-    echo "alias sf=\"php bin/console\"" >> ~/.bashrc && \
+    docker-php-ext-enable xdebug # && \
     curl -sSLo /usr/local/bin/phpunit https://phar.phpunit.de/phpunit-9.phar && \
     chmod +x /usr/local/bin/phpunit && \
     phpunit --version && \
     rm -rf /var/lib/apt/lists/*
 
+ENV XDEBUG_MODE=debug
+ENV XDEBUG_CONFIG="remote_enable=1 remote_mode=req client_port=9001 client_host=host.docker.internal discover_client_host=0"
+# idekey=\"VSCODE\" 可以不用加
+
 WORKDIR /var/www/symfony
 
-# 第一次記得進去容器跑 composer install & yarn install & yarn build
+# 第一次記得進去容器跑 composer install & yarn install & yarn build｀

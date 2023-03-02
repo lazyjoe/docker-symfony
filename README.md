@@ -60,7 +60,13 @@ Docker-symfony gives you everything you need for developing Symfony application.
     ```sh
     composer install && yarn install && yarn build
     ```
-6. Enjoy :-)
+
+6. If you want to use xdebug, you need to install php in your host as well, then vscode can use xdebug.
+   ```sh
+   brew tap shivammathur/php && brew install shivammathur/php/php@7.4
+   ```
+
+7. Enjoy :-)
 
 ## Usage
 
