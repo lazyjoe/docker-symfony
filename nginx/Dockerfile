@@ -1,7 +1,4 @@
-# FROM debian:jessie
 FROM debian:stretch
-
-MAINTAINER Maxence POUTORD <maxence.poutord@gmail.com>
 
 RUN apt-get update && apt-get install -y \
     nginx

@@ -56,7 +56,7 @@ Docker-symfony gives you everything you need for developing Symfony application.
         # Only if you have `doctrine/doctrine-fixtures-bundle` installed
         $ sf3 doctrine:fixtures:load --no-interaction
         ```
-5. Go into php container and run
+5. If project is pull from gitlab, don't forget to go into php container and run
     ```sh
     composer install && yarn install && yarn build
     ```
