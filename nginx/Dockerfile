@@ -1,4 +1,5 @@
-FROM debian:jessie
+# FROM debian:jessie
+FROM debian:stretch
 
 MAINTAINER Maxence POUTORD <maxence.poutord@gmail.com>
 
