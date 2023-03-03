@@ -66,7 +66,35 @@ Docker-symfony gives you everything you need for developing Symfony application.
    brew tap shivammathur/php && brew install shivammathur/php/php@7.4
    ```
 
-7. Enjoy :-)
+7. Setup debug config in vscode
+    ```json
+    {
+        "version": "0.2.0",
+        "configurations": [
+            {
+                "name": "Listen for Xdebug",
+                "type": "php",
+                "request": "launch",
+                "port": 9001,
+                "pathMappings": {
+                    "/var/www/symfony": "${workspaceFolder}/"
+                }
+            }
+        ]
+    }
+    ```
+
+8. Add this to ~/.zshrc to enable xdebug when running phpunit
+    ```sh
+    export XDEBUG_CONFIG="idekey=VSCODE"
+    ```
+
+9. Run phpunit in container with
+    ```sh
+    vender/bin/phpunit --filter testSayHiFunciton
+    ```
+
+10. Enjoy :-)
 
 ## Usage
 
