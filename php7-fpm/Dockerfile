@@ -5,7 +5,8 @@ ARG TIMEZONE
 ENV ALIAS1="alias ll='ls -al --color=auto'"
 ENV ALIAS2="alias hg='history|grep -v grep|grep -v hg|grep'"
 ENV ALIAS3="alias pag='ps aux|grep -v grep|grep -v pag|grep'"
-ENV ALIAS4="alias phpunit=vendor/bin/phpunit --colors=always"
+ENV ALIAS4="alias phpunit='vendor/bin/phpunit --colors=always'"
+ENV ALIAS5="alias sf='php bin/console'"
 
 RUN echo "memory_limit=512M" > /usr/local/etc/php/conf.d/memory-limit.ini && apt-get update && apt-get install -y \
     openssl \
@@ -31,6 +32,7 @@ RUN echo "memory_limit=512M" > /usr/local/etc/php/conf.d/memory-limit.ini && apt
     echo "$ALIAS2" >> ~/.bashrc && \
     echo "$ALIAS3" >> ~/.bashrc && \
     echo "$ALIAS4" >> ~/.bashrc && \
+    echo "$ALIAS5" >> ~/.bashrc && \
     echo "source ~/.bashrc" >> ~/.bash_profile && \
     rm -rf /var/lib/apt/lists/*
 
