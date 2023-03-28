@@ -8,22 +8,22 @@ ENV ALIAS3="alias pag='ps aux|grep -v grep|grep -v pag|grep'"
 ENV ALIAS4="alias phpunit='vendor/bin/phpunit --colors=always'"
 ENV ALIAS5="alias sf='php bin/console'"
 
-RUN echo "memory_limit=512M" > /usr/local/etc/php/conf.d/memory-limit.ini && apt-get update && apt-get install -y \
+RUN echo "memory_limit=512M" > /usr/local/etc/php/conf.d/memory-limit.ini && \
+    curl -sL https://deb.nodesource.com/setup_14.x | bash - && \
+    curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && \
+    echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list && \
+    apt-get update && apt-get install -y \
     openssl \
     git \
     unzip \
-    libpng-dev && \
-    apt-get install -y python2 && \
+    libpng-dev \
+    python2 \
+    nodejs \
+    yarn && \
     rm -rf /var/lib/apt/lists/* && \
-    docker-php-ext-install pdo pdo_mysql && \
-    docker-php-ext-install gd && \
+    docker-php-ext-install pdo pdo_mysql gd && \
     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && \
     composer --version && \
-    curl -sL https://deb.nodesource.com/setup_14.x | bash - && \
-    apt-get install -y nodejs && \
-    curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && \
-    echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list && \
-    apt-get update && apt-get install -y yarn && \
     ln -snf /usr/share/zoneinfo/${TIMEZONE} /etc/localtime && echo ${TIMEZONE} > /etc/timezone && \
     printf '[PHP]\ndate.timezone = "%s"\n', ${TIMEZONE} > /usr/local/etc/php/conf.d/tzone.ini && \
     pecl install xdebug-3.0.4 && \
