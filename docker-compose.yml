@@ -10,6 +10,7 @@ services:
             - ${SSH_KEY_PATH}:/root/.ssh
             - ./logs/symfony:/var/www/symfony/var/log
             - ./.data/GeoLite2-City.mmdb:/usr/local/share/GeoIP/GeoLite2-City.mmdb
+            - ${SSH_SCRIPT_PATH}:/usr/local/bin/cnttnc
     nginx:
         build: nginx
         ports:

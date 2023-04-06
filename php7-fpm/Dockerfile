@@ -19,6 +19,8 @@ RUN echo "memory_limit=512M" > /usr/local/etc/php/conf.d/memory-limit.ini && \
     libpng-dev \
     python2 \
     nodejs \
+    autossh \
+    procps \
     yarn && \
     rm -rf /var/lib/apt/lists/* && \
     docker-php-ext-install pdo pdo_mysql gd && \
