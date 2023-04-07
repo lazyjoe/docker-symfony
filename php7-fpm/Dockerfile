@@ -21,9 +21,10 @@ RUN echo "memory_limit=512M" > /usr/local/etc/php/conf.d/memory-limit.ini && \
     nodejs \
     autossh \
     procps \
+    libzip-dev \
     yarn && \
     rm -rf /var/lib/apt/lists/* && \
-    docker-php-ext-install pdo pdo_mysql gd && \
+    docker-php-ext-install pdo pdo_mysql gd zip && \
     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && \
     composer --version && \
     ln -snf /usr/share/zoneinfo/${TIMEZONE} /etc/localtime && echo ${TIMEZONE} > /etc/timezone && \
