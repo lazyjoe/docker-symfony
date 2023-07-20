@@ -23,6 +23,7 @@ RUN echo "memory_limit=512M" > /usr/local/etc/php/conf.d/memory-limit.ini && \
     python2 \
     nodejs \
     autossh \
+    iputils-ping \
     procps \
     libzip-dev \
     yarn && \
