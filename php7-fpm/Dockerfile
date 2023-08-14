@@ -1,5 +1,5 @@
 # 构建基础镜像
-FROM php:7.4-fpm
+FROM php:8.2-fpm
 ARG TIMEZONE
 
 ENV ALIAS1="alias ll='ls -al --color=auto'"
@@ -20,7 +20,7 @@ RUN echo "memory_limit=512M" > /usr/local/etc/php/conf.d/memory-limit.ini && \
     unzip \
     libpng-dev \
     libjpeg62-turbo-dev \
-    python2 \
+    python3 \
     nodejs \
     autossh \
     iputils-ping \
@@ -34,7 +34,7 @@ RUN echo "memory_limit=512M" > /usr/local/etc/php/conf.d/memory-limit.ini && \
     composer --version && \
     ln -snf /usr/share/zoneinfo/${TIMEZONE} /etc/localtime && echo ${TIMEZONE} > /etc/timezone && \
     printf '[PHP]\ndate.timezone = "%s"\n', ${TIMEZONE} > /usr/local/etc/php/conf.d/tzone.ini && \
-    pecl install xdebug-3.0.4 apcu && \
+    pecl install xdebug apcu && \
     docker-php-ext-enable xdebug apcu && \
     echo "$ALIAS1" >> ~/.bashrc && \
     echo "$ALIAS2" >> ~/.bashrc && \
