@@ -11,7 +11,7 @@ ENV ALIAS6="alias sf='php bin/console'"
 ENV ALIAS7="alias clr='php bin/console cache:clear --env=test'"
 
 RUN echo "memory_limit=512M" > /usr/local/etc/php/conf.d/memory-limit.ini && \
-    curl -sL https://deb.nodesource.com/setup_14.x | bash - && \
+    curl -sL https://deb.nodesource.com/setup_17.x | bash - && \
     curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && \
     echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list && \
     apt-get update && apt-get install -y \
@@ -21,7 +21,6 @@ RUN echo "memory_limit=512M" > /usr/local/etc/php/conf.d/memory-limit.ini && \
     libpng-dev \
     libjpeg62-turbo-dev \
     python3 \
-    nodejs \
     autossh \
     iputils-ping \
     procps \
@@ -44,6 +43,8 @@ RUN echo "memory_limit=512M" > /usr/local/etc/php/conf.d/memory-limit.ini && \
     echo "$ALIAS6" >> ~/.bashrc && \
     echo "$ALIAS7" >> ~/.bashrc && \
     echo "source ~/.bashrc" >> ~/.bash_profile && \
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash && \
+    . ~/.nvm/nvm.sh && nvm install 17 && \
     rm -rf /var/lib/apt/lists/*
 
 ENV XDEBUG_MODE=debug
