@@ -32,41 +32,21 @@ Docker-symfony gives you everything you need for developing Symfony application.
     **Note:** For **OS X**, please take a look [here](https://docs.docker.com/docker-for-mac/networking/) and for **Windows** read [this](https://docs.docker.com/docker-for-windows/#/step-4-explore-the-application-and-run-examples) (4th step).
 
 4. Prepare Symfony app
-    1. Update app/config/parameters.yml
+    1. Update .env.local with db ip
 
         ```yml
-        # path/to/your/symfony-project/app/config/parameters.yml
-        parameters:
-            database_host: db
+        DATABASE_HOST=xxxxx
         ```
 
-    2. Composer install & create database
+    2. container operation
 
         ```bash
-        $ docker-compose exec php bash
-        $ composer install
-        # Symfony2
-        $ sf doctrine:database:create
-        $ sf doctrine:schema:update --force
-        # Only if you have `doctrine/doctrine-fixtures-bundle` installed
-        $ sf doctrine:fixtures:load --no-interaction
-        # Symfony3
-        $ sf3 doctrine:database:create
-        $ sf3 doctrine:schema:update --force
-        # Only if you have `doctrine/doctrine-fixtures-bundle` installed
-        $ sf3 doctrine:fixtures:load --no-interaction
+        $ docker-compose exec docker-symfony-php-1 bash
+        # or docker exec -it docker-symfony-php-1 bash
+        $ composer install && nvm install 17 && yarn install && yarn build
         ```
-5. If project is pull from gitlab, don't forget to go into php container and run
-    ```sh
-    composer install && yarn install && yarn build
-    ```
 
-6. If you want to use xdebug, you need to install php in your host as well, then vscode can use xdebug.
-   ```sh
-   brew tap shivammathur/php && brew install shivammathur/php/php@7.4
-   ```
-
-7. Setup debug config in vscode
+5. Setup debug config in vscode
     ```json
     {
         "version": "0.2.0",

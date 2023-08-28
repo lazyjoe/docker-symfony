@@ -44,7 +44,6 @@ RUN echo "memory_limit=512M" > /usr/local/etc/php/conf.d/memory-limit.ini && \
     echo "$ALIAS7" >> ~/.bashrc && \
     echo "source ~/.bashrc" >> ~/.bash_profile && \
     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash && \
-    . ~/.nvm/nvm.sh && nvm install 17 && \
     rm -rf /var/lib/apt/lists/*
 
 ENV XDEBUG_MODE=debug
@@ -52,4 +51,4 @@ ENV XDEBUG_CONFIG="remote_enable=1 remote_mode=req client_port=9001 client_host=
 
 WORKDIR /var/www/symfony
 
-# 第一次記得進去容器跑 composer install & yarn install & yarn build｀
+# 第一次記得進去容器跑 composer install & nvm install 17 & yarn install & yarn build｀
