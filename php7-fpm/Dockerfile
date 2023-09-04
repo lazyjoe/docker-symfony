@@ -51,4 +51,4 @@ ENV XDEBUG_CONFIG="remote_enable=1 remote_mode=req client_port=9001 client_host=
 
 WORKDIR /var/www/symfony
 
-# 第一次記得進去容器跑 composer install & nvm install 17 & yarn install & yarn build｀
+# 第一次記得進去容器跑 composer install & nvm install 12 & yarn install & yarn build｀
