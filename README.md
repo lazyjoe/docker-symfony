@@ -43,7 +43,7 @@ Docker-symfony gives you everything you need for developing Symfony application.
         ```bash
         $ docker-compose exec docker-symfony-php-1 bash
         # or docker exec -it docker-symfony-php-1 bash
-        $ composer install && nvm install 17 && yarn install && yarn build
+        $ composer install && nvm install 12 && yarn install && yarn build
         ```
 
 5. Setup debug config in vscode
