@@ -25,10 +25,11 @@ RUN echo "memory_limit=512M" > /usr/local/etc/php/conf.d/memory-limit.ini && \
     iputils-ping \
     procps \
     libzip-dev \
+    libicu-dev \
     yarn && \
     rm -rf /var/lib/apt/lists/* && \
     docker-php-ext-configure gd --with-jpeg=/usr/include/ && \
-    docker-php-ext-install pdo pdo_mysql zip gd && \
+    docker-php-ext-install pdo pdo_mysql zip gd intl && \
     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && \
     composer --version && \
     ln -snf /usr/share/zoneinfo/${TIMEZONE} /etc/localtime && echo ${TIMEZONE} > /etc/timezone && \
@@ -51,4 +52,4 @@ ENV XDEBUG_CONFIG="remote_enable=1 remote_mode=req client_port=9001 client_host=
 
 WORKDIR /var/www/symfony
 
-# 第一次記得進去容器跑 composer install & nvm install 17 & yarn install & yarn build｀
+# 第一次記得進去容器跑 composer install & nvm install 12 & yarn install & yarn build｀
