@@ -26,7 +26,8 @@ RUN echo "memory_limit=512M" > /usr/local/etc/php/conf.d/memory-limit.ini && \
     procps \
     libzip-dev \
     libicu-dev \
-    yarn && \
+    yarn \
+    librabbitmq-dev && \
     rm -rf /var/lib/apt/lists/* && \
     docker-php-ext-configure gd --with-jpeg=/usr/include/ && \
     docker-php-ext-install pdo pdo_mysql zip gd intl && \
@@ -34,8 +35,8 @@ RUN echo "memory_limit=512M" > /usr/local/etc/php/conf.d/memory-limit.ini && \
     composer --version && \
     ln -snf /usr/share/zoneinfo/${TIMEZONE} /etc/localtime && echo ${TIMEZONE} > /etc/timezone && \
     printf '[PHP]\ndate.timezone = "%s"\n', ${TIMEZONE} > /usr/local/etc/php/conf.d/tzone.ini && \
-    pecl install xdebug apcu && \
-    docker-php-ext-enable xdebug apcu && \
+    pecl install xdebug apcu amqp && \
+    docker-php-ext-enable xdebug apcu amqp && \
     echo "$ALIAS1" >> ~/.bashrc && \
     echo "$ALIAS2" >> ~/.bashrc && \
     echo "$ALIAS3" >> ~/.bashrc && \
@@ -52,4 +53,4 @@ ENV XDEBUG_CONFIG="remote_enable=1 remote_mode=req client_port=9001 client_host=
 
 WORKDIR /var/www/symfony
 
-# 第一次記得進去容器跑 composer install & nvm install 12 & yarn install & yarn build｀
+# 第一次記得進去容器跑 composer install & nvm install 17 & yarn install & yarn build｀
