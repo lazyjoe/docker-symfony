@@ -25,16 +25,18 @@ RUN echo "memory_limit=512M" > /usr/local/etc/php/conf.d/memory-limit.ini && \
     iputils-ping \
     procps \
     libzip-dev \
-    yarn && \
+    libicu-dev \
+    yarn \
+    librabbitmq-dev && \
     rm -rf /var/lib/apt/lists/* && \
     docker-php-ext-configure gd --with-jpeg=/usr/include/ && \
-    docker-php-ext-install pdo pdo_mysql zip gd && \
+    docker-php-ext-install pdo pdo_mysql zip gd intl && \
     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && \
     composer --version && \
     ln -snf /usr/share/zoneinfo/${TIMEZONE} /etc/localtime && echo ${TIMEZONE} > /etc/timezone && \
     printf '[PHP]\ndate.timezone = "%s"\n', ${TIMEZONE} > /usr/local/etc/php/conf.d/tzone.ini && \
-    pecl install xdebug apcu && \
-    docker-php-ext-enable xdebug apcu && \
+    pecl install xdebug apcu amqp && \
+    docker-php-ext-enable xdebug apcu amqp && \
     echo "$ALIAS1" >> ~/.bashrc && \
     echo "$ALIAS2" >> ~/.bashrc && \
     echo "$ALIAS3" >> ~/.bashrc && \
