@@ -26,6 +26,7 @@ RUN echo "memory_limit=512M" > /usr/local/etc/php/conf.d/memory-limit.ini && \
     procps \
     libzip-dev \
     libicu-dev \
+    lsd \
     yarn \
     librabbitmq-dev && \
     rm -rf /var/lib/apt/lists/* && \
@@ -52,5 +53,12 @@ ENV XDEBUG_MODE=debug
 ENV XDEBUG_CONFIG="remote_enable=1 remote_mode=req client_port=9001 client_host=host.docker.internal discover_client_host=0 idekey=VSCODE"
 
 WORKDIR /var/www/symfony
+ENV ALIAS8="alias phpfmt='vendor/bin/phpcbf --standard=PSR12'"
+ENV ALIAS9="alias phpstan='vendor/bin/phpstan analyse --memory-limit=2G -c phpstan.neon'"
+ENV ALIAS10="alias ll='lsd -al'"
+RUN echo "$ALIAS8" >> ~/.bashrc && \
+    echo "$ALIAS9" >> ~/.bashrc && \
+    echo "$ALIAS10" >> ~/.bashrc && \
+    echo "source ~/.bashrc" >> ~/.bash_profile
 
 # 第一次記得進去容器跑 composer install & nvm install 12 & yarn install & yarn build｀
