@@ -2,7 +2,7 @@
 FROM php:8.2-fpm
 ARG TIMEZONE
 
-ENV ALIAS1="alias ll='ls -al --color=auto'"
+ENV ALIAS1="alias ll='lsd -al --color=auto'"
 ENV ALIAS2="alias hg='history|grep -v grep|grep -v hg|grep'"
 ENV ALIAS3="alias pag='ps aux|grep -v grep|grep -v pag|grep'"
 ENV ALIAS4="alias phpunit='vendor/bin/phpunit --colors=always'"
@@ -55,10 +55,10 @@ ENV XDEBUG_CONFIG="remote_enable=1 remote_mode=req client_port=9001 client_host=
 WORKDIR /var/www/symfony
 ENV ALIAS8="alias phpfmt='vendor/bin/phpcbf --standard=PSR12'"
 ENV ALIAS9="alias phpstan='vendor/bin/phpstan analyse --memory-limit=2G -c phpstan.neon'"
-ENV ALIAS10="alias ll='lsd -al'"
 RUN echo "$ALIAS8" >> ~/.bashrc && \
     echo "$ALIAS9" >> ~/.bashrc && \
-    echo "$ALIAS10" >> ~/.bashrc && \
     echo "source ~/.bashrc" >> ~/.bash_profile
 
 # 第一次記得進去容器跑 composer install & nvm install 12 & yarn install & yarn build｀
+# 如果需要 python2，載點: https://www.python.org/ftp/python/2.7.18/Python-2.7.18.tgz
+# 解壓縮後進入 ./configure --enable-optimizations & make & make install

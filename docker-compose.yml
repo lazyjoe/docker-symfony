@@ -9,6 +9,7 @@ services:
             - ${SYMFONY_APP_PATH}:/var/www/symfony
             - ${SSH_KEY_PATH}:/root/.ssh
             - ./logs/symfony:/var/www/symfony/var/log
+            #            - ./Python-2.7.18:/tmp/python2
             - ./.data/GeoLite2-City.mmdb:/usr/local/share/GeoIP/GeoLite2-City.mmdb
             - ${SSH_SCRIPT_PATH}:/usr/local/bin/cnttnc
     nginx:
