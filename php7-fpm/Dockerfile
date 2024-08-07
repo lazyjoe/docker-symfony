@@ -9,9 +9,11 @@ ENV ALIAS4="alias phpunit='vendor/bin/phpunit --colors=always'"
 ENV ALIAS5="alias pf='vendor/bin/phpunit --colors=always --filter'"
 ENV ALIAS6="alias sf='php bin/console'"
 ENV ALIAS7="alias clr='php bin/console cache:clear --env=test'"
+ENV ALIAS8="alias phpfmt='vendor/bin/phpcbf --standard=PSR12'"
+ENV ALIAS9="alias phpstan='vendor/bin/phpstan analyse --memory-limit=2G -c phpstan.neon'"
 
 RUN echo "memory_limit=512M" > /usr/local/etc/php/conf.d/memory-limit.ini && \
-    curl -sL https://deb.nodesource.com/setup_17.x | bash - && \
+    curl -sL https://deb.nodesource.com/setup_12.x | bash - && \
     curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && \
     echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list && \
     apt-get update && apt-get install -y \
@@ -45,19 +47,17 @@ RUN echo "memory_limit=512M" > /usr/local/etc/php/conf.d/memory-limit.ini && \
     echo "$ALIAS5" >> ~/.bashrc && \
     echo "$ALIAS6" >> ~/.bashrc && \
     echo "$ALIAS7" >> ~/.bashrc && \
+    echo "$ALIAS8" >> ~/.bashrc && \
+    echo "$ALIAS9" >> ~/.bashrc && \
     echo "source ~/.bashrc" >> ~/.bash_profile && \
     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash && \
     rm -rf /var/lib/apt/lists/*
 
-ENV XDEBUG_MODE=debug
-ENV XDEBUG_CONFIG="remote_enable=1 remote_mode=req client_port=9001 client_host=host.docker.internal discover_client_host=0 idekey=VSCODE"
-
 WORKDIR /var/www/symfony
-ENV ALIAS8="alias phpfmt='vendor/bin/phpcbf --standard=PSR12'"
-ENV ALIAS9="alias phpstan='vendor/bin/phpstan analyse --memory-limit=2G -c phpstan.neon'"
-RUN echo "$ALIAS8" >> ~/.bashrc && \
-    echo "$ALIAS9" >> ~/.bashrc && \
-    echo "source ~/.bashrc" >> ~/.bash_profile
+
+ENV XDEBUG_MODE=debug
+# mac uses host.docker.internal & linux use docker ip (i.e. 172.19.0.1)
+ENV XDEBUG_CONFIG="remote_enable=1 remote_mode=req client_port=9001 client_host=172.19.0.1 discover_client_host=0 idekey=VSCODE"
 
 # 第一次記得進去容器跑 composer install & nvm install 12 & yarn install & yarn build｀
 # 如果需要 python2，載點: https://www.python.org/ftp/python/2.7.18/Python-2.7.18.tgz
