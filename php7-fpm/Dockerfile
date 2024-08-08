@@ -56,8 +56,8 @@ RUN echo "memory_limit=512M" > /usr/local/etc/php/conf.d/memory-limit.ini && \
 WORKDIR /var/www/symfony
 
 ENV XDEBUG_MODE=debug
-# mac uses host.docker.internal & linux use docker ip (i.e. 172.19.0.1)
-ENV XDEBUG_CONFIG="remote_enable=1 remote_mode=req client_port=9001 client_host=172.19.0.1 discover_client_host=0 idekey=VSCODE"
+# mac uses host.docker.internal & linux use php then add "172.sth.0.1 php" to /etc/hosts
+ENV XDEBUG_CONFIG="remote_enable=1 remote_mode=req client_port=9001 discover_client_host=0 idekey=VSCODE client_host=php"
 
 # 第一次記得進去容器跑 composer install & nvm install 12 & yarn install & yarn build｀
 # 如果需要 python2，載點: https://www.python.org/ftp/python/2.7.18/Python-2.7.18.tgz
