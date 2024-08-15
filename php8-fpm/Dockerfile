@@ -1,5 +1,5 @@
 # 构建基础镜像
-FROM php:8.2-fpm
+FROM php:8.3-fpm
 ARG TIMEZONE
 
 ENV ALIAS1="alias ll='lsd -al --color=auto'"
