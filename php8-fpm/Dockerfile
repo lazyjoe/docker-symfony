@@ -1,5 +1,5 @@
 # 构建基础镜像
-FROM php:8.3-fpm
+FROM php:8.4-fpm
 ARG TIMEZONE
 
 ENV ALIAS1="alias ll='lsd -al --color=auto'"
@@ -13,6 +13,7 @@ ENV ALIAS8="alias phpfmt='vendor/bin/phpcbf --standard=PSR12'"
 ENV ALIAS9="alias phpstan='vendor/bin/phpstan analyse --memory-limit=2G -c phpstan.neon'"
 
 RUN echo "memory_limit=512M" > /usr/local/etc/php/conf.d/memory-limit.ini && \
+    echo "error_reporting = E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED" > /usr/local/etc/php/conf.d/error-reporting.ini && \
     curl -sL https://deb.nodesource.com/setup_12.x | bash - && \
     curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && \
     echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list && \
@@ -37,8 +38,9 @@ RUN echo "memory_limit=512M" > /usr/local/etc/php/conf.d/memory-limit.ini && \
     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && \
     composer --version && \
     ln -snf /usr/share/zoneinfo/${TIMEZONE} /etc/localtime && echo ${TIMEZONE} > /etc/timezone && \
+
     printf '[PHP]\ndate.timezone = "%s"\n', ${TIMEZONE} > /usr/local/etc/php/conf.d/tzone.ini && \
-    pecl install xdebug apcu amqp && \
+    pecl install xdebug-3.4.0 apcu-5.1.24 amqp && \
     docker-php-ext-enable xdebug apcu amqp && \
     echo "$ALIAS1" >> ~/.bashrc && \
     echo "$ALIAS2" >> ~/.bashrc && \
@@ -57,7 +59,7 @@ WORKDIR /var/www/symfony
 
 ENV XDEBUG_MODE=debug
 # mac uses host.docker.internal & linux use php then add "172.sth.0.1 php" to /etc/hosts
-ENV XDEBUG_CONFIG="remote_enable=1 remote_mode=req client_port=9001 discover_client_host=0 idekey=VSCODE client_host=php"
+ENV XDEBUG_CONFIG="remote_enable=1 remote_mode=req client_port=9001 discover_client_host=0 idekey=VSCODE client_host=172.18.0.1"
 
 # 第一次記得進去容器跑 composer install & nvm install 12 & yarn install & yarn build｀
 # 如果需要 python2，載點: https://www.python.org/ftp/python/2.7.18/Python-2.7.18.tgz
