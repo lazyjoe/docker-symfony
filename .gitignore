@@ -3,3 +3,4 @@
 .env
 .vscode/
 /Python-2.7.18/
+/nginx/symfony.local*
