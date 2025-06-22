@@ -4,6 +4,26 @@ services:
             context: php8-fpm
             args:
                 TIMEZONE: ${TIMEZONE}
+        extra_hosts:
+            - "${MR_BURNS_HOST}"
+            - "${GITLAB_HOST}"
+            - "${GITLAB_SHORT_HOST}"
+            - "${SNOWBALL_HOST}"
+            - "${MAGGIE_KAFKA_HOST}"
+            - "${MAGGIE_KAFKA_SHORT_HOST}"
+            - "${MR_BURNS_KAUFMICH_HOST}"
+            - "${MR_BURNS_KAUFMICH_SHORT_HOST}"
+            - "${MR_BURNS_SHORT_HOST}"
+            - "${SNOWBALL_KAUFMICH_HOST}"
+            - "${SNOWBALL_SHORT_HOST}"
+            - "${BILD_HOST}"
+            - "${TWEETY_HOST}"
+            - "${TWEETY_SHORT_HOST}"
+            - "${KUB3_HOST}"
+            - "${KUB3_SHORT_HOST}"
+            - "${PODMAN2_HOST}"
+            - "${PODMAN2_SHORT_HOST}"
+            - "${APIDOC_HOST}"
         volumes:
             - ${SYMFONY_APP_PATH}:/var/www/symfony
             - ${SSH_KEY_PATH}:/root/.ssh
