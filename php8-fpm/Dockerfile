@@ -12,12 +12,14 @@ ENV ALIAS7="alias clr='php bin/console cache:clear --env=test'"
 ENV ALIAS8="alias phpfmt='vendor/bin/phpcbf --standard=PSR12'"
 ENV ALIAS9="alias phpstan='vendor/bin/phpstan analyse --memory-limit=2G -c phpstan.neon'"
 
+# Configure PHP to suppress deprecation warnings and prevent them from being output to browser
 RUN echo "memory_limit=512M" > /usr/local/etc/php/conf.d/memory-limit.ini && \
-    # echo "error_reporting = E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED" > /usr/local/etc/php/conf.d/error-reporting.ini && \
-    curl -sL https://deb.nodesource.com/setup_12.x | bash - && \
-    curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && \
-    echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list && \
-    apt-get update && apt-get install -y \
+    echo "error_reporting = E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED" > /usr/local/etc/php/conf.d/error-reporting.ini && \
+    echo "display_errors = Off" > /usr/local/etc/php/conf.d/display-errors.ini && \
+    echo "log_errors = On" > /usr/local/etc/php/conf.d/log-errors.ini
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
     openssl \
     git \
     unzip \
@@ -29,19 +31,26 @@ RUN echo "memory_limit=512M" > /usr/local/etc/php/conf.d/memory-limit.ini && \
     procps \
     libzip-dev \
     libicu-dev \
-    lsd \
-    yarn \
-    librabbitmq-dev && \
-    rm -rf /var/lib/apt/lists/* && \
-    docker-php-ext-configure gd --with-jpeg=/usr/include/ && \
-    docker-php-ext-install pdo pdo_mysql zip gd intl && \
-    curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && \
-    composer --version && \
-    ln -snf /usr/share/zoneinfo/${TIMEZONE} /etc/localtime && echo ${TIMEZONE} > /etc/timezone && \
-    printf '[PHP]\ndate.timezone = "%s"\n' ${TIMEZONE} > /usr/local/etc/php/conf.d/tzone.ini && \
-    pecl install xdebug-3.4.0 apcu amqp && \
-    docker-php-ext-enable xdebug apcu amqp && \
-    echo "$ALIAS1" >> ~/.bashrc && \
+    librabbitmq-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install PHP extensions
+RUN docker-php-ext-configure gd --with-jpeg=/usr/include/ && \
+    docker-php-ext-install pdo pdo_mysql zip gd intl
+
+# Install Composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+# Set timezone
+RUN ln -snf /usr/share/zoneinfo/${TIMEZONE} /etc/localtime && echo ${TIMEZONE} > /etc/timezone && \
+    printf '[PHP]\ndate.timezone = "%s"\n' ${TIMEZONE} > /usr/local/etc/php/conf.d/tzone.ini
+
+# Install PECL extensions
+RUN pecl install xdebug-3.4.0 apcu amqp && \
+    docker-php-ext-enable xdebug apcu amqp
+
+# Set up aliases
+RUN echo "$ALIAS1" >> ~/.bashrc && \
     echo "$ALIAS2" >> ~/.bashrc && \
     echo "$ALIAS3" >> ~/.bashrc && \
     echo "$ALIAS4" >> ~/.bashrc && \
@@ -50,9 +59,17 @@ RUN echo "memory_limit=512M" > /usr/local/etc/php/conf.d/memory-limit.ini && \
     echo "$ALIAS7" >> ~/.bashrc && \
     echo "$ALIAS8" >> ~/.bashrc && \
     echo "$ALIAS9" >> ~/.bashrc && \
-    echo "source ~/.bashrc" >> ~/.bash_profile && \
-    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash && \
+    echo "source ~/.bashrc" >> ~/.bash_profile
+
+# Install Node.js and Yarn
+RUN curl -sL https://deb.nodesource.com/setup_12.x | bash - && \
+    curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && \
+    echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list && \
+    apt-get update && apt-get install -y yarn lsd && \
     rm -rf /var/lib/apt/lists/*
+
+# Install NVM
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
 
 WORKDIR /var/www/symfony
 
