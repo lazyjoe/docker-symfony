@@ -25,6 +25,9 @@ RUN apt-get update && apt-get install -y \
     unzip \
     libpng-dev \
     libjpeg62-turbo-dev \
+    libfreetype6-dev \
+    libwebp-dev \
+    libxpm-dev \
     python3 \
     autossh \
     iputils-ping \
@@ -32,22 +35,53 @@ RUN apt-get update && apt-get install -y \
     libzip-dev \
     libicu-dev \
     librabbitmq-dev \
+    gnupg \
+    build-essential \
+    zlib1g-dev \
+    libncurses5-dev \
+    libgdbm-dev \
+    libnss3-dev \
+    libssl-dev \
+    libreadline-dev \
+    libffi-dev \
+    libsqlite3-dev \
+    wget \
+    libbz2-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Install PHP extensions
-RUN docker-php-ext-configure gd --with-jpeg=/usr/include/ && \
+# Install PHP extensions with complete GD support
+RUN docker-php-ext-configure gd \
+    --with-freetype \
+    --with-jpeg \
+    --with-webp \
+    --with-xpm && \
     docker-php-ext-install pdo pdo_mysql zip gd intl
 
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+# Install Python 2.7.18 from source (optimized build)
+RUN cd /tmp && \
+    wget https://www.python.org/ftp/python/2.7.18/Python-2.7.18.tgz && \
+    tar -xzf Python-2.7.18.tgz && \
+    cd Python-2.7.18 && \
+    ./configure --prefix=/usr/local/python2.7 --enable-shared && \
+    make -j$(nproc) && \
+    make altinstall && \
+    ln -sf /usr/local/python2.7/bin/python2.7 /usr/local/bin/python2 && \
+    ln -sf /usr/local/python2.7/bin/python2.7 /usr/local/bin/python2.7 && \
+    echo "/usr/local/python2.7/lib" > /etc/ld.so.conf.d/python2.7.conf && \
+    ldconfig && \
+    cd / && \
+    rm -rf /tmp/Python-2.7.18*
 
 # Set timezone
 RUN ln -snf /usr/share/zoneinfo/${TIMEZONE} /etc/localtime && echo ${TIMEZONE} > /etc/timezone && \
     printf '[PHP]\ndate.timezone = "%s"\n' ${TIMEZONE} > /usr/local/etc/php/conf.d/tzone.ini
 
 # Install PECL extensions
-RUN pecl install xdebug-3.4.0 apcu amqp && \
-    docker-php-ext-enable xdebug apcu amqp
+RUN pecl install xdebug-3.4.0 apcu && \
+    docker-php-ext-enable xdebug apcu
 
 # Set up aliases
 RUN echo "$ALIAS1" >> ~/.bashrc && \
@@ -61,15 +95,19 @@ RUN echo "$ALIAS1" >> ~/.bashrc && \
     echo "$ALIAS9" >> ~/.bashrc && \
     echo "source ~/.bashrc" >> ~/.bash_profile
 
-# Install Node.js and Yarn
-RUN curl -sL https://deb.nodesource.com/setup_12.x | bash - && \
-    curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && \
-    echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list && \
+# Install Yarn and lsd
+RUN curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor -o /usr/share/keyrings/yarn-keyring.gpg && \
+    echo "deb [signed-by=/usr/share/keyrings/yarn-keyring.gpg] https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list && \
     apt-get update && apt-get install -y yarn lsd && \
     rm -rf /var/lib/apt/lists/*
 
-# Install NVM
-RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
+# Install NVM and Node.js 12
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash && \
+    export NVM_DIR="$HOME/.nvm" && \
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" && \
+    nvm install 12 && \
+    nvm use 12 && \
+    nvm alias default 12
 
 WORKDIR /var/www/symfony
 
@@ -77,7 +115,4 @@ ENV XDEBUG_MODE=debug
 # mac uses host.docker.internal & linux use php then add "172.sth.0.1 php" to /etc/hosts
 #ENV XDEBUG_CONFIG="remote_enable=1 remote_mode=req client_port=9001 discover_client_host=0 idekey=VSCODE client_host=172.18.0.1"
 ENV XDEBUG_CONFIG="remote_enable=1 remote_mode=req client_port=9001 discover_client_host=0 idekey=VSCODE client_host=host.docker.internal"
-
-# 第一次記得進去容器跑 composer install & nvm install 12 & yarn install & yarn build｀
-# 如果需要 python2，載點: https://www.python.org/ftp/python/2.7.18/Python-2.7.18.tgz
-# 解壓縮後進入 ./configure --enable-optimizations & make & make install
+# 第一次記得進去容器跑 composer install & nvm install 12 & yarn install & (yarn dev or yarn build)｀

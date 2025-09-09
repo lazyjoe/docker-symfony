@@ -34,7 +34,7 @@ services:
     nginx:
         build: nginx
         ports:
-            - 80:80
+            - 8080:80
         volumes:
             - ${SYMFONY_APP_PATH}:/var/www/symfony
             - ./logs/nginx/:/var/log/nginx
