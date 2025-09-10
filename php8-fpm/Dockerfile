@@ -80,8 +80,8 @@ RUN ln -snf /usr/share/zoneinfo/${TIMEZONE} /etc/localtime && echo ${TIMEZONE} >
     printf '[PHP]\ndate.timezone = "%s"\n' ${TIMEZONE} > /usr/local/etc/php/conf.d/tzone.ini
 
 # Install PECL extensions
-RUN pecl install xdebug-3.4.0 apcu && \
-    docker-php-ext-enable xdebug apcu
+RUN pecl install xdebug-3.4.0 apcu amqp && \
+    docker-php-ext-enable xdebug apcu amqp
 
 # Set up aliases
 RUN echo "$ALIAS1" >> ~/.bashrc && \
