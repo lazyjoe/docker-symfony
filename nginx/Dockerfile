@@ -13,6 +13,7 @@ RUN echo "upstream php-upstream { server php:9000; }" > /etc/nginx/conf.d/upstre
 
 RUN usermod -u 1000 www-data
 
+RUN sed -i -E 's|fastcgi_param[[:space:]]+HTTP_HOST[[:space:]]+\$host;|fastcgi_param  HTTP_HOST        \$http_host;|' /etc/nginx/fastcgi_params
 CMD ["nginx"]
 
 EXPOSE 80
